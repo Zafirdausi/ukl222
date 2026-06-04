@@ -11,6 +11,7 @@ import { JwtService } from '@nestjs/jwt';
 
 import { Role } from '@prisma/client';
 import { CreateCashierDto } from './dto/create-cashier.dto';
+import { RegisterDto } from './dto/register.dto';
 
 @Injectable()
 export class AuthService {
@@ -66,6 +67,30 @@ export class AuthService {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         password: hashedPassword,
         role: Role.CASHIER,
+      },
+    });
+  }
+
+  async register(dto: RegisterDto) {
+    const existingUser = await this.prisma.user.findUnique({
+      where: {
+        username: dto.username,
+      },
+    });
+
+    if (existingUser) {
+      throw new BadRequestException('Username sudah digunakan');
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+    const hashedPassword = await bcrypt.hash(dto.password, 10);
+
+    return this.prisma.user.create({
+      data: {
+        username: dto.username,
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        password: hashedPassword,
+        role: dto.role,
       },
     });
   }

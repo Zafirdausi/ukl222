@@ -8,6 +8,7 @@ import { Roles } from './decorator/roles.decorator';
 
 import { CreateCashierDto } from './dto/create-cashier.dto';
 import { LoginDto } from './dto/login.dto';
+import { RegisterDto } from './dto/register.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -28,4 +29,10 @@ export class AuthController {
   createCashier(@Body() dto: CreateCashierDto) {
     return this.authService.createCashier(dto);
   }
+
+  @Post('register')
+  register(@Body() dto: RegisterDto) {
+    return this.authService.register(dto);
+
+}
 }
