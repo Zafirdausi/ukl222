@@ -1,5 +1,9 @@
+[phases.install]
+cmds = ["npm install"]
+
 [phases.build]
-cmds = ["npm install --include=dev", "npm run build"]
+cmds = ["npm run build"]
+dependsOn = ["install"]
 
 [start]
 cmd = "npx prisma db push && node dist/main.js"
